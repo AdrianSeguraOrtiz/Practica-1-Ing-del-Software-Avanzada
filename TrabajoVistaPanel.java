@@ -1,6 +1,7 @@
 package trabajo;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.GridLayout;
 import javax.swing.*;
 
@@ -11,24 +12,35 @@ public class TrabajoVistaPanel extends JPanel {
 	private JComboBox <String> cBaseDatos;
 	private JLabel lDatosId;
 	private JComboBox <String> cDatosId;
+	private JLabel lSelecciona;
 	private JRadioButton rbProteinas;
 	private JRadioButton rbNucleotidos;
-	private JLabel lSelecciona;
-	private JComboBox <String> cSecuencia;
 	private JLabel lSecuencia;
-	private JTextField tfPorcentaje;
+	private JComboBox <String> cSecuencia;
 	private JLabel lPorcentaje;
+	private JTextField tfPorcentaje;
 	private JButton bBuscar;
 	private JTextArea taRes;
 	private JScrollPane spRes;
+
+	private JPanel p0;
+	private JPanel p1;
+	private JPanel p2;
+	private JPanel p3;
+	private JPanel pRelleno1;
+	private JPanel pRelleno2;
+	private JPanel pRelleno3;
+	private JPanel pRelleno4;
+	
+	private static Color LILA_PASTEL = new Color (246, 212, 255);
+	private static Color AMARILLO_PLATANO = Color.getHSBColor(0, 100, 100);
+	private static Color CELESTE = new Color (199, 254, 254);
+	private static Color VERDE_ACIERTO = new Color (185, 255, 179);
 	
 	public TrabajoVistaPanel() {
 		
-		this.setBackground(new Color(246, 212, 255));
-		
-		JPanel p0 = new JPanel();
-		p0.setBackground(Color.getHSBColor(0, 100, 100));
-		p0.setLayout(new GridLayout( 2 , 1 ) ) ;
+		p0 = new JPanel();
+		p0.setLayout(new GridLayout( 2 , 2 ) ) ;
 		
 		lBaseDatos = new JLabel("Elije la base de datos:    ");
 		cBaseDatos = new JComboBox <String> ();
@@ -43,8 +55,7 @@ public class TrabajoVistaPanel extends JPanel {
 		p0.add(lDatosId);
 		p0.add(cDatosId);
 		
-		JPanel p1 = new JPanel();
-		p1.setBackground(Color.getHSBColor(0, 100, 100));
+		p1 = new JPanel();
 		p1.setLayout(new GridLayout( 3 , 1 ) ) ;
 		
 		lSelecciona = new JLabel("¿Qué quieres buscar?       ");
@@ -56,15 +67,12 @@ public class TrabajoVistaPanel extends JPanel {
 		ButtonGroup grupo = new ButtonGroup();
 		grupo.add(rbProteinas);
 		grupo.add(rbNucleotidos);
-		rbProteinas.setBackground(Color.getHSBColor(0, 100, 100));
-		rbNucleotidos.setBackground(Color.getHSBColor(0, 100, 100));
 		
 		p1.add(lSelecciona);
 		p1.add(rbProteinas);
 		p1.add(rbNucleotidos);
 			
-		JPanel p2 = new JPanel();
-		p2.setBackground(Color.getHSBColor(0, 100, 100));
+		p2 = new JPanel();
 		p2.setLayout(new GridLayout( 2 , 1 ) ) ;
 		
 		lSecuencia = new JLabel("Introduce secuencia de búsqueda           ");
@@ -75,8 +83,7 @@ public class TrabajoVistaPanel extends JPanel {
 		p2.add(lSecuencia);
 		p2.add(cSecuencia);
 		
-		JPanel p3 = new JPanel();
-		p3.setBackground(Color.getHSBColor(0, 100, 100));
+		p3 = new JPanel();
 		p3.setLayout(new GridLayout( 2 , 1 ) ) ;
 		
 		lPorcentaje = new JLabel("Introduce porcentaje (0.0 - 1.0)       " );
@@ -90,24 +97,21 @@ public class TrabajoVistaPanel extends JPanel {
 				
 		taRes = new JTextArea(30, 70);
 		taRes.setEditable(false);
-		taRes.setBackground(new Color (199, 254, 254));
 		spRes = new JScrollPane(taRes);
 		
-		JPanel pRelleno1 = new JPanel();
-		pRelleno1.setBackground(new Color(246, 212, 255));
+		pRelleno1 = new JPanel();
 		pRelleno1.setSize(20, 10);
 		
-		JPanel pRelleno2 = new JPanel();
-		pRelleno2.setBackground(new Color(246, 212, 255));
+		pRelleno2 = new JPanel();
 		pRelleno2.setSize(20, 10);
 		
-		JPanel pRelleno3 = new JPanel();
-		pRelleno3.setBackground(new Color(246, 212, 255));
+		pRelleno3 = new JPanel();
 		pRelleno3.setSize(20, 10);
 		
-		JPanel pRelleno4 = new JPanel();
-		pRelleno4.setBackground(new Color(246, 212, 255));
+		pRelleno4 = new JPanel();
 		pRelleno4.setSize(20, 10);
+		
+		iniciarColoresFondo();
 		
 		this.add(p0);
 		this.add(pRelleno1);
@@ -119,6 +123,47 @@ public class TrabajoVistaPanel extends JPanel {
 		this.add(pRelleno4);
 		this.add(bBuscar);
 		this.add(spRes);
+	}
+	
+	public void iniciarColoresFondo() {
+		Component elementosAmarillos [] = {p0, p1, rbProteinas, rbNucleotidos, p2, p3};
+		ponerColor (elementosAmarillos, AMARILLO_PLATANO);
+		
+		Component elementosLilas [] = {pRelleno1, pRelleno2, pRelleno3, pRelleno4};
+		ponerColor (elementosLilas, LILA_PASTEL);	
+		this.setBackground(LILA_PASTEL);
+		
+		taRes.setBackground(CELESTE);
+	}
+	
+	private void ponerColor (Component [] elementos, Color c) {
+		for (Component e : elementos) {
+			e.setBackground(c);
+		}
+	}
+	
+	public void reiniciarVentana() {
+		cSecuencia.setBackground(cBaseDatos.getBackground());
+		tfPorcentaje.setBackground(Color.WHITE);
+		taRes.setBackground(CELESTE);
+	}
+	
+	public void coloreaErrorSecuencia() {
+		Component elementos [] = {taRes, cSecuencia};
+		ponerColor(elementos, Color.PINK);
+	}
+	
+	public void coloreaErrorPorcentaje() {
+		Component elementos [] = {taRes, tfPorcentaje};
+		ponerColor(elementos, Color.PINK);
+	}
+	
+	public void coloreaAciertoBusqueda() {
+		taRes.setBackground(VERDE_ACIERTO);
+	}
+	
+	public void coloreaErrorBusqueda() {
+		taRes.setBackground(Color.PINK);
 	}
 
 	public JRadioButton getRbProteinas() {
@@ -151,10 +196,5 @@ public class TrabajoVistaPanel extends JPanel {
 
 	public JComboBox<String> getcDatosId() {
 		return cDatosId;
-	}
-
-	public JLabel getlSecuencia() {
-		return lSecuencia;
-	}
-	
+	}	
 }

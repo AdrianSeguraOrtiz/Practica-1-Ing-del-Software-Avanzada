@@ -1,6 +1,5 @@
 package trabajo;
 
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JDialog;
@@ -15,31 +14,23 @@ public class TrabajoControlador implements ActionListener {
 		this.tvp = tvp;
 	}
 	
-	public void actionPerformed(ActionEvent arg0) {
+	public void actionPerformed(ActionEvent e) {
 		
-		tvp.getcSecuencia().setBackground(tvp.getcBaseDatos().getBackground());
-		tvp.getTfPorcentaje().setBackground(Color.WHITE);
-		tvp.getTaRes().setBackground(new Color (199, 254, 254));
-		
+		tvp.reiniciarVentana();
 		boolean todoCorrecto = true;
 		
 		String secuencia = "";
-		JDialog dSecuencia = new JDialog ();
-		dSecuencia.add(new JLabel ("      Especifique la secuencia a buscar. "));
-		dSecuencia.setSize(250, 100);
 		try {
 			secuencia = tvp.getcSecuencia().getSelectedItem().toString().toUpperCase();
 		}
 		catch (NullPointerException npe) {
-			dSecuencia.setVisible(true);
-			tvp.getcSecuencia().setBackground(Color.PINK);
-			tvp.getTaRes().setBackground(Color.PINK);
+			mostrarError("      Especifique la secuencia a buscar. ");
+			tvp.coloreaErrorSecuencia();
 			todoCorrecto = false;
 		}		
-		if (secuencia.equals("")) {
-			dSecuencia.setVisible(true);
-			tvp.getcSecuencia().setBackground(Color.PINK);
-			tvp.getTaRes().setBackground(Color.PINK);
+		if (todoCorrecto & secuencia.equals("")) {
+			mostrarError("      Especifique la secuencia a buscar. ");
+			tvp.coloreaErrorSecuencia();
 			todoCorrecto = false;
 		}
 		else if (! buscada(secuencia)) {
@@ -48,31 +39,24 @@ public class TrabajoControlador implements ActionListener {
 		
 		String p = null;
 		float porcentaje = -1;
-		JDialog dPorcentaje = new JDialog ();
-		dPorcentaje.setSize(250, 100);
 		try {
 			p = tvp.getTfPorcentaje().getText();
 			porcentaje = Float.parseFloat(p);
 		}
 		catch (NumberFormatException nfe) {
 			if (p.equals("")) {
-				dPorcentaje.add(new JLabel ("      Especifique el porcentaje. "));
-				dPorcentaje.setVisible(true);
+				mostrarError("      Especifique el porcentaje. ");
 			}
 			else {
-				dPorcentaje.add(new JLabel ("      Formato del porcentaje inadecuado."));
-				dPorcentaje.setVisible(true);
+				mostrarError("      Formato del porcentaje inadecuado.");
 			}
-			tvp.getTfPorcentaje().setBackground(Color.PINK);
-			tvp.getTaRes().setBackground(Color.PINK);
+			tvp.coloreaErrorPorcentaje();
 			todoCorrecto = false;
 		}
-		
+
 		if (porcentaje != -1 & (porcentaje < 0 || porcentaje > 1)) {
-			dPorcentaje.add(new JLabel ("      Porcentaje fuera de rango."));
-			dPorcentaje.setVisible(true);
-			tvp.getTfPorcentaje().setBackground(Color.PINK);
-			tvp.getTaRes().setBackground(Color.PINK);
+			mostrarError("      Porcentaje fuera de rango.");
+			tvp.coloreaErrorPorcentaje();
 			todoCorrecto = false;
 		}
 		
@@ -83,16 +67,24 @@ public class TrabajoControlador implements ActionListener {
 			try{
 				Res = bCnt.blastQuery('p', tvp.getcBaseDatos().getSelectedItem().toString(), 
 						tvp.getcDatosId().getSelectedItem().toString(), porcentaje, secuencia);
+				tvp.coloreaAciertoBusqueda();
 			} 
 			catch(Exception exc){
-				Res = "Error en la llamada: " + exc.toString();
+				mostrarError( "Error en la llamada: " + exc.toString());
+				tvp.coloreaErrorBusqueda();
 			}
-			tvp.getTaRes().setBackground(new Color (185, 255, 179));
 		}
 		else if (tvp.getRbNucleotidos().isSelected()) {
 			Res = "La búsqueda de nucleótidos todavía no está implementada. ";
 		}
 		tvp.getTaRes().setText(Res);
+	}
+	
+	private void mostrarError (String s) {
+		JDialog d = new JDialog ();
+		d.add(new JLabel (s));
+		d.setSize(250, 100);
+		d.setVisible(true);
 	}
 
 	private boolean buscada(String s) {
