@@ -96,5 +96,4 @@ public class TrabajoControlador implements ActionListener {
 		}
 		return res;
 	}
-	
 }

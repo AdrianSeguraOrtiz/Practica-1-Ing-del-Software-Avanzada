@@ -197,5 +197,4 @@ public class TrabajoVistaPanel extends JPanel {
 	public JComboBox<String> getcDatosId() {
 		return cDatosId;
 	}
-	
 }
