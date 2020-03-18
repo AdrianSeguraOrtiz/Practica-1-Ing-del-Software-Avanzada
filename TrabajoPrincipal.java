@@ -30,3 +30,4 @@ public class TrabajoPrincipal {
 		SwingUtilities.invokeLater(rr);
 	}
 }
+
